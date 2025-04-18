@@ -13,3 +13,20 @@
   height: 640px;
   background-color: rgb(6 192 37);
 }
+
+.cell {
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border: 1px solid black;
+}
+
+.stone {
+  width: 56px;
+  height: 56px;
+  background-color: black;
+  border-radius: 56px;
+}
