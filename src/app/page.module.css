@@ -1,3 +1,17 @@
+.startscreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 1500px;
+  height: 660px;
+  background-color: white;
+  transform: translate(-50%, -50%);
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -6,19 +20,13 @@
   height: 100vh;
   min-height: 100vh;
   padding: 0 0.5rem;
-}
-
-.char {
-  display: inline-block;
-  transform: translateY(var(--y, 110%));
-  transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-  transition-delay: calc(0.04s * var(--char-index));
+  background-color: black;
 }
 
 .board {
   width: 640px;
   height: 640px;
-  background-color: rgb(6 192 37);
+  background-color: rgb(2 146 26);
 }
 
 .cell {
@@ -36,4 +44,12 @@
   height: 56px;
   background-color: black;
   border-radius: 56px;
+}
+
+.text {
+  padding: 20px 0;
+  font-size: 100px;
+  font-weight: 500;
+  color: black;
+  text-align:;
 }

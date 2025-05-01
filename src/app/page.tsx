@@ -105,7 +105,10 @@ export default function Home() {
   };
   return (
     <div className={styles.container}>
-      <div className={styles.char} />
+      <div className={styles.startscreen}>
+        <div className={styles.text}>Game start</div>
+        <div className={styles.text}>Othello</div>
+      </div>
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((color, x) => (
