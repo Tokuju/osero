@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
+
 export default function Home() {
-  const [showStartScreen, setShowStartScreen] = useState(true);
   const [turnColor, setTurnColor] = useState(1);
+  const [showStartScreen, setShowStartScreen] = useState(true); // ← 追加
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -15,28 +16,19 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const directions = [
-    [1, 0], //下
-    [-1, 0], //上
-    [0, -1], //左
-    [1, -1], //左下
-    [-1, -1], //左上
-    [1, 1], //右上
-    [0, 1], //右
-    [-1, 1], //右下
+    [1, 0],
+    [-1, 0],
+    [0, -1],
+    [1, -1],
+    [-1, -1],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
   ];
-  // 新しい関数: 置ける場所があるか確認
+
   const hasValidMove = (color: number, board: number[][]) => {
-    const directions = [
-      [1, 0],
-      [-1, 0],
-      [0, -1],
-      [1, -1],
-      [-1, -1],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-    ];
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         if (board[y][x] !== 0) continue;
@@ -60,13 +52,11 @@ export default function Home() {
   };
 
   const clickHandler = (x: number, y: number) => {
-    console.log(x, y);
     const newBoard = structuredClone(board);
-
     let Flipped = false;
     for (let i = 0; i < directions.length; i++) {
       const [dy, dx] = directions[i];
-      const toFlip: [number, number][] = []; //裏返せそうな石の座標を保存
+      const toFlip: [number, number][] = [];
       let cy = y + dy;
       let cx = x + dx;
       while (cx >= 0 && cx < 8 && cy >= 0 && cy < 8 && newBoard[cy][cx] === 3 - turnColor) {
@@ -98,28 +88,17 @@ export default function Home() {
         setTurnColor(nextColor);
       } else if (hasValidMove(turnColor, newBoard)) {
         alert(`プレイヤー${nextColor}は置ける場所がないためスキップされました`);
-        // 現在の手番のまま
       } else {
         alert('両者とも置ける場所がありません。ゲーム終了！');
       }
     }
-    const countStones = (board: number[][]) => {
-      let black = 0;
-      let white = 0;
-      for (const row of board) {
-        for (const cell of row) {
-          if (cell === 1) black++;
-          if (cell === 2) white++;
-        }
-      }
-      return { black, white };
-    };
-    const { black, white } = countStones(board);
-    return (
-      <div className={styles.container}>
+  };
+
+  return (
+    <div className={styles.container}>
+      {showStartScreen ? (
         <div
           className={styles.startscreen}
-          style={{ display: showStartScreen ? 'flex' : 'none' }}
           onClick={() => {
             console.log('Start screen clicked');
             setShowStartScreen(false);
@@ -129,6 +108,7 @@ export default function Home() {
           <div className={styles.text}>Game start</div>
           <div className={styles.text2}>クリックしてね</div>
         </div>
+      ) : (
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((color, x) => (
@@ -143,7 +123,7 @@ export default function Home() {
             )),
           )}
         </div>
-      </div>
-    );
-  };
+      )}
+    </div>
+  );
 }
