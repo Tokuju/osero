@@ -139,17 +139,21 @@ export default function Home() {
       >
         <div className={styles.text}>Othello</div>
         <div className={styles.text1}>Game start</div>
-        <div className={styles.text2}>クリックしてね</div>
+        <div className={styles.text2}>クリック here!!!</div>
       </div>
 
       <div className={styles.score}>
-        <div style={{ color: 'white' }}>● 黒: {black}</div>
-        <div style={{ color: 'white' }}>○ 白: {white}</div>
+        <div style={{ color: 'black' }}>黒: {black}</div>
+        <div style={{ color: 'black' }}>白: {white}</div>
         <div style={{ marginTop: '20px', fontSize: '32px' }}>
-          現在のターン: {turnColor === 1 ? '● 黒' : '○ 白'}
+          現在のターン: {turnColor === 1 ? '黒' : '白'}
           <button className={styles.passButton} onClick={handlePass}>
             パスする
           </button>
+          <div className="topBar">
+            <div className="score">…</div>
+            <button className="passButton">パス</button>
+          </div>
         </div>
       </div>
 
