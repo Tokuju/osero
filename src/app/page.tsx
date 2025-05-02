@@ -2,7 +2,23 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
+
 export default function Home() {
+  const checkWinner = (board: number[][]) => {
+    const { black, white } = countStones(board);
+    if (black > white) return '黒の勝ち！';
+    if (white > black) return '白の勝ち！';
+    return '引き分け！';
+  };
+
+  const handlePass = () => {
+    const nextColor = 3 - turnColor;
+    if (hasValidMove(nextColor, board)) {
+      setTurnColor(nextColor);
+    } else {
+      alert('両者とも置ける場所がありません。ゲーム終了！');
+    }
+  };
   const [showStartScreen, setShowStartScreen] = useState(true);
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -15,28 +31,19 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const directions = [
-    [1, 0], //下
-    [-1, 0], //上
-    [0, -1], //左
-    [1, -1], //左下
-    [-1, -1], //左上
-    [1, 1], //右上
-    [0, 1], //右
-    [-1, 1], //右下
+    [1, 0],
+    [-1, 0],
+    [0, -1],
+    [1, -1],
+    [-1, -1],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
   ];
-  // 新しい関数: 置ける場所があるか確認
+
   const hasValidMove = (color: number, board: number[][]) => {
-    const directions = [
-      [1, 0],
-      [-1, 0],
-      [0, -1],
-      [1, -1],
-      [-1, -1],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-    ];
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         if (board[y][x] !== 0) continue;
@@ -59,21 +66,36 @@ export default function Home() {
     return false;
   };
 
-  const clickHandler = (x: number, y: number) => {
-    console.log(x, y);
-    const newBoard = structuredClone(board);
+  const countStones = (board: number[][]) => {
+    let black = 0;
+    let white = 0;
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell === 1) black++;
+        if (cell === 2) white++;
+      }
+    }
+    return { black, white };
+  };
 
+  const { black, white } = countStones(board);
+
+  const clickHandler = (x: number, y: number) => {
+    const newBoard = structuredClone(board);
     let Flipped = false;
+
     for (let i = 0; i < directions.length; i++) {
       const [dy, dx] = directions[i];
-      const toFlip: [number, number][] = []; //裏返せそうな石の座標を保存
+      const toFlip: [number, number][] = [];
       let cy = y + dy;
       let cx = x + dx;
+
       while (cx >= 0 && cx < 8 && cy >= 0 && cy < 8 && newBoard[cy][cx] === 3 - turnColor) {
         toFlip.push([cy, cx]);
         cy += dy;
         cx += dx;
       }
+
       if (
         cx >= 0 &&
         cx < 8 &&
@@ -89,6 +111,7 @@ export default function Home() {
         Flipped = true;
       }
     }
+
     if (Flipped) {
       newBoard[y][x] = turnColor;
       const nextColor = 3 - turnColor;
@@ -98,52 +121,52 @@ export default function Home() {
         setTurnColor(nextColor);
       } else if (hasValidMove(turnColor, newBoard)) {
         alert(`プレイヤー${nextColor}は置ける場所がないためスキップされました`);
-        // 現在の手番のまま
       } else {
+        const winner = checkWinner(newBoard);
         alert('両者とも置ける場所がありません。ゲーム終了！');
       }
     }
-    const countStones = (board: number[][]) => {
-      let black = 0;
-      let white = 0;
-      for (const row of board) {
-        for (const cell of row) {
-          if (cell === 1) black++;
-          if (cell === 2) white++;
-        }
-      }
-      return { black, white };
-    };
-    const { black, white } = countStones(board);
-    return (
-      <div className={styles.container}>
-        <div
-          className={styles.startscreen}
-          style={{ display: showStartScreen ? 'flex' : 'none' }}
-          onClick={() => {
-            console.log('Start screen clicked');
-            setShowStartScreen(false);
-          }}
-        >
-          <div className={styles.text}>Othello</div>
-          <div className={styles.text}>Game start</div>
-          <div className={styles.text2}>クリックしてね</div>
-        </div>
-        <div className={styles.board}>
-          {board.map((row, y) =>
-            row.map((color, x) => (
-              <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
-                {color !== 0 && (
-                  <div
-                    className={styles.stone}
-                    style={{ background: color === 1 ? '#000' : '#fff' }}
-                  />
-                )}
-              </div>
-            )),
-          )}
+  };
+
+  return (
+    <div className={styles.container}>
+      <div
+        className={styles.startscreen}
+        style={{ display: showStartScreen ? 'flex' : 'none' }}
+        onClick={() => {
+          setShowStartScreen(false);
+        }}
+      >
+        <div className={styles.text}>Othello</div>
+        <div className={styles.text1}>Game start</div>
+        <div className={styles.text2}>クリックしてね</div>
+      </div>
+
+      <div className={styles.score}>
+        <div style={{ color: 'white' }}>● 黒: {black}</div>
+        <div style={{ color: 'white' }}>○ 白: {white}</div>
+        <div style={{ marginTop: '20px', fontSize: '32px' }}>
+          現在のターン: {turnColor === 1 ? '● 黒' : '○ 白'}
+          <button className={styles.passButton} onClick={handlePass}>
+            パスする
+          </button>
         </div>
       </div>
-    );
-  };
+
+      <div className={styles.board}>
+        {board.map((row, y) =>
+          row.map((color, x) => (
+            <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
+              {color !== 0 && (
+                <div
+                  className={styles.stone}
+                  style={{ background: color === 1 ? '#000' : '#fff' }}
+                />
+              )}
+            </div>
+          )),
+        )}
+      </div>
+    </div>
+  );
 }
