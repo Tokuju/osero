@@ -150,10 +150,7 @@ export default function Home() {
           <button className={styles.passButton} onClick={handlePass}>
             パスする
           </button>
-          <div className="topBar">
-            <div className="score">…</div>
-            <button className="passButton">パス</button>
-          </div>
+          <div className="topBar" />
         </div>
       </div>
 
