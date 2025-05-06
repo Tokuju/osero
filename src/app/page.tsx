@@ -89,6 +89,8 @@ export default function Home() {
     }
   };
   const clickHandler = (x: number, y: number) => {
+    const isValid = validMoves.some(([vy, vx]) => vx === x && vy === y);
+    if (!isValid) return;
     const newBoard = structuredClone(board);
     let flipped = false;
     for (const [dy, dx] of directions) {
