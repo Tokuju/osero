@@ -105,3 +105,40 @@
 
   /* transform: translateX は不要に */
 }
+
+.hint {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  background: rgb(128 128 128 / 50%);
+  border-radius: 50%;
+}
+
+/* スマホ向け調整 */
+@media (width <= 600px) {
+  .text,
+  .text1,
+  .text2 {
+    font-size: 24px;
+  }
+
+  .passButton {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  .board {
+    grid-template-rows: repeat(8, 32px);
+    grid-template-columns: repeat(8, 32px);
+  }
+
+  .cell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stone {
+    width: 75%;
+    height: 75%;
+  }
+}
